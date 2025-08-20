@@ -1,26 +1,115 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teclado</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="reset.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Teclado de Sons — CS</title>
+  <link rel="stylesheet" href="reset.css">
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-    <h1> Teclado sons </h1>
-    <h2> Som de tiro</h2>
-    <section class="teclado">
-        <button class="tecla tecla-som-1"> <img src="./img/ak47.webp" alt="descrição imagem"></button>
-        <button class="tecla tecla-som-2"> <img src="./img/awp.webp" alt="descrição imagem"></button>
-        <button class="tecla tecla-som-3"> <img src="./img/Csgo_weapon_smokegrenade.png" alt="descrição imagem"></button>
-        <button class="tecla tecla-som-4"> <img src="./img/deagle.webp" alt="descrição imagem"></button>
-        <button class="tecla tecla-som-5"> <img src="./img/Flashbang_csgo.png" alt="descrição imagem"></button>
-        <button class="tecla tecla-som-6"> <img src="./img/glock.webp" alt="descrição imagem"></button>
-        <button class="tecla tecla-som-7"> <img src="./img/m4a1s.webp" alt="descrição imagem"></button>
-        <button class="tecla tecla-som-8"> <img src="./img/mp7.webp" alt="descrição imagem"></button>
-        <button class="tecla tecla-som-9"> <img src="./img/usps.webp" alt="descrição imagem"></button>
+  <header class="topo">
+    <h1>Teclado de Sons</h1>
+    <p class="sub">Clique, toque ou use o teclado para tocar os sons.</p>
+  </header>
+
+  <main>
+    <section class="teclado" aria-label="Teclado de sons">
+      <button class="tecla" data-som="ak47" aria-label="AK-47">
+        <img src="IMG/ak47.webp" alt="AK-47">
+        <span class="hint">1</span>
+      </button>
+      <button class="tecla" data-som="awp" aria-label="AWP">
+        <img src="IMG/awp.webp" alt="AWP">
+        <span class="hint">2</span>
+      </button>
+      <button class="tecla" data-som="smoke" aria-label="Granada de fumaça">
+        <img src="IMG/Csgo_weapon_smokegrenade.png" alt="Granada de fumaça">
+        <span class="hint">3</span>
+      </button>
+      <button class="tecla" data-som="deagle" aria-label="Desert Eagle">
+        <img src="IMG/deagle.webp" alt="Desert Eagle">
+        <span class="hint">4</span>
+      </button>
+      <button class="tecla" data-som="flash" aria-label="Flashbang">
+        <img src="IMG/Flashbang_csgo.png" alt="Flashbang">
+        <span class="hint">5</span>
+      </button>
+      <button class="tecla" data-som="glock" aria-label="Glock">
+        <img src="IMG/glock.webp" alt="Glock">
+        <span class="hint">6</span>
+      </button>
+      <button class="tecla" data-som="m4a1s" aria-label="M4A1-S">
+        <img src="IMG/m4a1s.webp" alt="M4A1-S">
+        <span class="hint">7</span>
+      </button>
+      <button class="tecla" data-som="mp7" aria-label="MP7">
+        <img src="IMG/mp7.webp" alt="MP7">
+        <span class="hint">8</span>
+      </button>
+      <button class="tecla" data-som="usp" aria-label="USP-S">
+        <img src="IMG/usps.webp" alt="USP-S">
+        <span class="hint">9</span>
+      </button>
     </section>
+  </main>
+
+  <!-- Sons -->
+  <audio id="som-ak47" src="SOM/ak47-1.wav" preload="auto"></audio>
+  <audio id="som-awp" src="SOM/awp_distant.wav" preload="auto"></audio>
+  <audio id="som-smoke" src="SOM/smoke_emit.wav" preload="auto"></audio>
+  <audio id="som-deagle" src="SOM/deagle-1-distant.wav" preload="auto"></audio>
+  <audio id="som-flash" src="SOM/flashbang_explode2.wav" preload="auto"></audio>
+  <audio id="som-glock" src="SOM/glock_01.wav" preload="auto"></audio>
+  <audio id="som-m4a1s" src="SOM/m4a1_us_distant.wav" preload="auto"></audio>
+  <audio id="som-mp7" src="SOM/mp7-1-distant.wav" preload="auto"></audio>
+  <audio id="som-usp" src="SOM/usp_02.wav" preload="auto"></audio>
+
+  <script>
+    (function() {
+      const mapTeclaNumero = ['Digit1','Digit2','Digit3','Digit4','Digit5','Digit6','Digit7','Digit8','Digit9'];
+      const sons = {
+        ak47: document.getElementById('som-ak47'),
+        awp: document.getElementById('som-awp'),
+        smoke: document.getElementById('som-smoke'),
+        deagle: document.getElementById('som-deagle'),
+        flash: document.getElementById('som-flash'),
+        glock: document.getElementById('som-glock'),
+        m4a1s: document.getElementById('som-m4a1s'),
+        mp7: document.getElementById('som-mp7'),
+        usp: document.getElementById('som-usp'),
+      };
+
+      function tocarSom(chave) {
+        const audio = sons[chave];
+        if (!audio) return;
+        audio.currentTime = 0;
+        audio.play().catch(() => {});
+      }
+
+      document.querySelectorAll('.tecla').forEach((btn, idx) => {
+        btn.addEventListener('click', () => tocarSom(btn.dataset.som));
+        btn.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            btn.click();
+          }
+        });
+        btn.title = `Tecla ${idx+1}`;
+      });
+
+      window.addEventListener('keydown', (e) => {
+        const i = mapTeclaNumero.indexOf(e.code);
+        if (i >= 0) {
+          const btn = document.querySelectorAll('.tecla')[i];
+          if (btn) {
+            btn.classList.add('ativa');
+            tocarSom(btn.dataset.som);
+            setTimeout(() => btn.classList.remove('ativa'), 120);
+          }
+        }
+      }, {passive: true});
+    })();
+  </script>
 </body>
 </html>
